@@ -3,18 +3,21 @@ import pyautogui
 import qrcode
 import io
 import socket
+import sys
 
 app = Flask(__name__)
 
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        # Isso conecta com um IP externo só para obter o IP local, não envia dados
         s.connect(("8.8.8.8", 80))
         ip = s.getsockname()[0]
     finally:
         s.close()
     return ip
+
+# Pegamos a porta antes de tudo
+porta = int(sys.argv[1]) if len(sys.argv) > 1 else 5050
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -29,7 +32,7 @@ def index():
 @app.route('/qr')
 def qr():
     ip = get_local_ip()
-    url = f"http://{ip}:5050"
+    url = f"http://{ip}:{porta}"
     qr_img = qrcode.make(url)
 
     img_io = io.BytesIO()
@@ -38,5 +41,5 @@ def qr():
 
     return send_file(img_io, mimetype='image/png')
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5050)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=porta)
