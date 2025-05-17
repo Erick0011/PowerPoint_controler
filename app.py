@@ -3,7 +3,6 @@ import pyautogui
 import qrcode
 import io
 import socket
-import sys
 
 app = Flask(__name__)
 
@@ -16,8 +15,15 @@ def get_local_ip():
         s.close()
     return ip
 
-# Pegamos a porta antes de tudo
-porta = int(sys.argv[1]) if len(sys.argv) > 1 else 5050
+def find_free_port():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(('', 0))  # bind em porta 0 escolhe porta livre
+    port = s.getsockname()[1]
+    s.close()
+    return port
+
+# Escolhe porta livre
+porta = find_free_port()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -42,4 +48,15 @@ def qr():
     return send_file(img_io, mimetype='image/png')
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=porta)
+    ip = get_local_ip()
+    print("=" * 50)
+    print("✅ Controle Remoto de Slides Iniciado!")
+    print(f"📱 Escaneie o QR code em: http://{ip}:{porta}/qr")
+    print(f"🌐 Ou copie este endereço no celular: http://{ip}:{porta}")
+    print()
+    print("📤 Depois de acessar, abra a apresentação em tela cheia no PC")
+    print("📲 E controle os slides direto do celular")
+    print()
+    print("⛔ Para fechar o servidor, pressione Ctrl + C")
+    print("=" * 50)
+    app.run(host="0.0.0.0", port=porta, debug=False, use_reloader=False)
