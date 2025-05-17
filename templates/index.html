@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de Slides</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Controle de Slides</h1>
+        <form method="POST">
+            <div class="button-container">
+                <button name="action" value="prev">
+                    <img src="{{ url_for('static', filename='img/prev.png') }}" alt="Anterior">
+                    Anterior
+                </button>
+                <button name="action" value="next">
+                    <img src="{{ url_for('static', filename='img/next.png') }}" alt="Próximo">
+                    Próximo
+                </button>
+            </div>
+        </form>
+        <div class="qr-button">
+            <a href="/qr" target="_blank">🔗 Mostrar QR Code</a>
+        </div>
+    </div>
+    <footer>
+        © 2025 Erick. Todos os direitos reservados.
+    </footer>
+</body>
+</html>
